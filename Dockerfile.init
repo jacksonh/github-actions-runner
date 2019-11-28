@@ -1,0 +1,14 @@
+
+FROM ubuntu:16.04
+
+ENV GITHUB_ACTIONS_TOKEN=""
+
+COPY ./runner/ ./runner
+COPY ./entrypoint.sh ./runner/entrypoint.sh
+
+RUN adduser --disabled-password --gecos "" runner && chown -R runner /runner
+RUN apt-get update && apt-get install -y libicu-dev libcurl4-openssl-dev
+
+USER runner
+WORKDIR /runner/
+ENTRYPOINT ./runner/config.sh --token $GITHUB_ACTIONS_TOKEN
